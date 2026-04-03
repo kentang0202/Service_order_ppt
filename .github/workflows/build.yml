@@ -19,10 +19,10 @@ jobs:
         
     - name: Build EXE with Eel
       run: |
-        python -m eel main.py . --onefile --noconsole --name "2026司會模板製作"
+        python -m eel main.py . --onefile --noconsole --name "SundayServicePPT"
         
     - name: Upload EXE
       uses: actions/upload-artifact@v4 # 關鍵修復：改成 v4
       with:
         name: Church-Tool-Windows-Package
-        path: dist/2026司會模板製作.exe
+        path: dist/SundayServicePPT.exe
