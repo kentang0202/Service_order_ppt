@@ -1,15 +1,15 @@
 name: Build Windows EXE
 
-on: [push] # 當你 git push 上傳程式碼時自動執行
+on: [push]
 
 jobs:
   build:
-    runs-on: windows-latest # 在 GitHub 的 Windows 虛擬機上跑
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # 順便升級到 v4
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5 # 順便升級到 v5
       with:
         python-version: '3.10'
         
@@ -18,13 +18,11 @@ jobs:
         pip install eel python-pptx pyinstaller setuptools
         
     - name: Build EXE with Eel
-      # 這裡的 --name 就是產出的檔案名稱
       run: |
         python -m eel main.py . --onefile --noconsole --name "2026司會模板製作"
         
     - name: Upload EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4 # 關鍵修復：改成 v4
       with:
         name: Church-Tool-Windows-Package
-        # 注意：path 必須指向 dist 資料夾下對應的檔名
         path: dist/2026司會模板製作.exe
