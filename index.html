@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>主大永2026主日司會模板 生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>⛪ 主大永2026主日司會模板 生成器</h1>
+    </header>
+   
+    <div class="main-content">
+        <div class="editor-box">
+            <label>📖 日期＋聖經本文經文 <br>(直接從話語稿或line貼上)</label>
+            <textarea id="bible" placeholder="格式：〈章節〉內容..."></textarea>
+        </div>
+
+        <div class="editor-box">
+            <label>💡 箴言交讀文 <br>(直接從line貼上)</label>
+            <textarea id="proverbs" placeholder="格式：角色 – 內容..."></textarea>
+        </div>
+    </div>
+
+    <div class="config-row">
+        
+        <div class="input-group">
+            <label>話語主題 (支援多行)</label>
+            <textarea id="topic" style="height: 50px;" placeholder="請輸入主題..."></textarea>
+        </div>
+    </div>
+
+
+
+    <div id="preview-section" style="margin-top: 20px; display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px dashed #ccc;">
+        <h3 style="color: #2c3e50; font-size: 1.1rem; border-bottom: 1px solid #ddd;">🔍 自動辨識 詳情預覽</h3>
+        <div id="preview-content" style="font-size: 0.9rem; color: #555; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+
+    <div class="action-area">
+        <button id="gen-btn" onclick="sendToPython()">🚀 開始生成PPT</button>
+        <div id="status-msg" class="status"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/eel.js"></script>
+<script>
+async function sendToPython() {
+    const btn = document.getElementById('gen-btn');
+    const statusMsg = document.getElementById('status-msg');
+    const previewSection = document.getElementById('preview-section'); // 剛才新增的 div
+    const previewContent = document.getElementById('preview-content');
+    
+    btn.disabled = true;
+    statusMsg.innerHTML = "⏳ 正在處理中...";
+
+    let data = {
+        date: "",
+        topic: document.getElementById('topic').value,
+        bible_raw: document.getElementById('bible').value,
+        proverbs_raw: document.getElementById('proverbs').value
+    };
+
+    try {
+        // 呼叫 Python 並接收物件
+        let result = await eel.start_process(data)();
+        
+        statusMsg.innerHTML = result.status;
+        statusMsg.style.color = result.status.includes("✅") ? "#27ae60" : "#e74c3c";
+
+        if (result.preview) {
+            previewSection.style.display = "block"; // 讓隱藏的預覽區塊出現
+            previewContent.innerHTML = result.preview;
+        }
+    } catch (err) {
+        statusMsg.innerHTML = "❌ 系統連線錯誤：" + err;
+    } finally {
+        btn.disabled = false;
+    }
+}
+</script>
+
+</body>
+</html>

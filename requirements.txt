@@ -1,0 +1,4 @@
+eel
+python-pptx
+pyinstaller
+setuptools
