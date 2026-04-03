@@ -109,9 +109,16 @@ def start_process(data):
         # 顯示經文全部內容
         preview_html += "<b>📖 辨識到的經文：</b><br>"
         for title, content in bible_matches:
-            # 移除內容長度限制，顯示完整內容
-            preview_html += f"<div style='margin-bottom:15px; background:#fff; padding:10px; border-radius:5px; border:1px solid #eee;'>" \
-                            f"<b>【{title}】</b><br>{content.strip().replace('\n', '<br>')}</div>"
+            # 1. 先處理內容的換行與空白，存入變數，避開 f-string 內部的反斜線
+            formatted_content = content.strip().replace('\n', '<br>')
+            
+            # 2. 使用這個變數來建立 HTML 字串
+            entry_html = (
+                f"<div style='margin-bottom:15px; background:#fff; padding:10px; "
+                f"border-radius:5px; border:1px solid #eee;'>"
+                f"<b>【{title}】</b><br>{formatted_content}</div>"
+            )
+            preview_html += entry_html
         
         preview_html += "<hr><b>💡 辨識到的箴言：</b><br>"
         # 顯示箴言全部內容
