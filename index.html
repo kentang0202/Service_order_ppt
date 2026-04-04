@@ -10,25 +10,26 @@
 <div class="app-container">
     <header>
         <h1>⛪ 主大永2026主日司會模板 生成器</h1>
+	    <p class="subtitle">2026 奔跑之年</p>
     </header>
    
     <div class="main-content">
         <div class="editor-box">
-            <label>📖 日期＋聖經本文經文 <br>(直接從話語稿或line貼上)</label>
-            <textarea id="bible" placeholder="格式：〈章節〉內容..."></textarea>
+            <label>📖 日期＋聖經本文經文<br>(直接從話語稿或line貼上)</label>
+            <textarea id="bible-input" placeholder="系統會自動偵測，您就大膽貼上吧&#10;&#10;＜yyyy年m月d日ＯＯ話語＞&#10;〈章節〉內容..."></textarea>
         </div>
 
         <div class="editor-box">
-            <label>💡 箴言交讀文 <br>(直接從line貼上)</label>
-            <textarea id="proverbs" placeholder="格式：角色 – 內容..."></textarea>
+            <label>💡 箴言交讀文<br>(直接從line貼上)</label>
+            <textarea id="proverbs-input" placeholder="系統會自動偵測，您就大膽貼上吧&#10;&#10;ＯＯ箴言交讀文&#10;角色 – 內容...（阿們！）&#10;角色 – 內容...（阿們！）"></textarea>
         </div>
     </div>
 
     <div class="config-row">
         
         <div class="input-group">
-            <label>話語主題 (支援多行)</label>
-            <textarea id="topic" style="height: 50px;" placeholder="請輸入主題..."></textarea>
+            <label>🖊️ 話語主題</label>
+            <textarea id="topic" style="height: 70px;" placeholder="請貼上主題...&#10;（可多行）"></textarea>
         </div>
     </div>
 
@@ -60,16 +61,24 @@ async function sendToPython() {
     let data = {
         date: "",
         topic: document.getElementById('topic').value,
-        bible_raw: document.getElementById('bible').value,
-        proverbs_raw: document.getElementById('proverbs').value
+        bible_raw: document.getElementById('bible-input').value,
+        proverbs_raw: document.getElementById('proverbs-input').value
     };
 
     try {
         // 呼叫 Python 並接收物件
         let result = await eel.start_process(data)();
-        
+ 
+        // ✅ 關鍵修改：使用 innerHTML 接收 Python 傳來的 <span>
         statusMsg.innerHTML = result.status;
-        statusMsg.style.color = result.status.includes("✅") ? "#27ae60" : "#e74c3c";
+        statusMsg.style.color = result.success ? "#27ae60" : "#e74c3c";
+        
+        // 改用布林值判斷，不再依賴勾勾符號
+        if (result.success) {
+            statusMsg.style.color = "#27ae60"; // 成功綠
+        } else {
+            statusMsg.style.color = "#e74c3c"; // 失敗紅
+        }
 
         if (result.preview) {
             previewSection.style.display = "block"; // 讓隱藏的預覽區塊出現

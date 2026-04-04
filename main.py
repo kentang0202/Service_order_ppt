@@ -32,15 +32,19 @@ def start_process(data):
 
         # 2. 智慧型日期偵測 (優先從經文抓取，支援 yyyy/mm/dd 或 yyyy年mm月dd日)
         date_match = re.search(r'(\d{4})[年./](\d{1,2})[月./](\d{1,2})', bible_raw)
+
         if date_match:
             y, m, d = date_match.groups()
             date_str = f"{y}年{int(m)}月{int(d)}日"
             file_date = f"{y}{int(m):0>2}{int(d):0>2}"  # 補零格式供檔名使用
+            date_display = f"📅 偵測日期：{date_str}"
         else:
             # 沒抓到則使用今天日期
             today = datetime.date.today()
             date_str = f"{today.year}年{today.month}月{today.day}日"
             file_date = today.strftime("%Y%m%d")
+            # 增加 HTML 備註標籤
+            date_display = f"📅 偵測日期：{date_str} <span class='auto-date'>(無輸入，使用當前日期)</span>"
 
         # 3. Regex 解析經文與箴言
         # 經文：抓取 〈〉 標題與內容
@@ -104,7 +108,22 @@ def start_process(data):
         prs.save(output_name)
 
         # 6. 建立詳細預覽 HTML (顯示全部內容) 
-        preview_html = f"<b>📅 偵測日期：</b>{date_str}<br><hr>"
+        preview_html = f"<div class='preview-header'>{date_display}</div>"
+
+        # 處理主題的換行 (把純文字換行轉為 HTML 換行)
+        formatted_topic = topic_str.strip().replace('\n', '<br>')
+
+        # 組合主題：標籤後面加個 <br>，內容包在 .topic-content 裡
+        # 如果 topic_str 為空，我們給一個預設提示或留白
+        topic_display = (
+            f"<div class='preview-header'>"
+            f"🖊️ 話語主題：<br>"
+            f"<span class='topic-content'>{formatted_topic if formatted_topic else '（尚未輸入）'}</span>"
+            f"</div>"
+        )
+        preview_html += topic_display
+        preview_html += "<hr>"
+
         
         # 顯示經文全部內容
         preview_html += "<b>📖 辨識到的經文：</b><br>"
@@ -127,12 +146,17 @@ def start_process(data):
             preview_html += f"<div style='margin-bottom:8px;'><b>{i+1}. {role}：</b> {text.strip()}</div>"
 
         return {
+            "success": True,
             "status": f"✅ 成功生成：{output_name}",
             "preview": preview_html
         }
 
     except Exception as e:
-        return {"status": f"❌ 系統錯誤：{str(e)}", "preview": ""}
+        return {
+            "success": False,
+            "status": f"❌ 系統錯誤：{str(e)}", 
+            "preview": ""
+        }
 
 # 啟動 Eel 視窗
 eel.start('index.html', size=(800, 750))
