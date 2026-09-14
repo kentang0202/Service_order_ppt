@@ -63,25 +63,34 @@ header h1 {
 .header-template label {
     font-weight: bold;
     margin-bottom: 6px;
-    color: #34495e;
+    color: #1b4f72;         /* 🏆 改為深海軍藍，維持沈穩並帶有藍調 */
     font-size: 1.1rem;
 }
 
 /* 統一下拉選單樣式 */
 select {
-    padding: 8px 6px ;
-    border: 1px solid #ddd;
+    padding: 8px 6px;
+    border: 2.5px solid #85c1e9;               /* 🏆 邊框改為柔和天藍色 */
     border-radius: 6px;
     font-size: 1rem;
-    color: #2c3e50;
-    background-color: #fff;
+    color: #1a5276;                            /* 🏆 選單文字改為典雅藍灰深色 */
+    background-color: #f4f9fd;                 /* 🏆 底色換成極淡的粉藍，增加辨識度 */
     cursor: pointer;
     box-sizing: border-box;
     width: 95%;
+    box-shadow: 0 1px 4px rgba(52, 152, 219, 0.15); /* 🏆 加上微弱的藍色環境光感 */
+    transition: all 0.2s ease;
+}
+
+select:hover {
+    border-color: #3498db;                     /* 滑鼠懸停時邊框加深 */
+    background-color: #ffffff;
 }
 
 select:focus {
-    border-color: #3498db;
+    border-color: #2980b9;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
     outline: none;
 }
 
