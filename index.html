@@ -28,7 +28,7 @@
     <div class="main-content">
         <div class="editor-box">
             <label>📖 日期＋聖經本文經文<br>(直接從話語稿或line貼上)</label>
-            <textarea id="bible-input" placeholder="系統會自動偵測，您就大膽貼上吧&#10;&#10;＜yyyy年m月d日ＯＯ話語＞&#10;〈章節〉內容..."></textarea>
+            <textarea id="bible-input" placeholder="系統會自動偵測，您就大膽貼上吧&#10;&#10;＜yyyy年m月d日某某話語＞&#10;〈章節〉內容..."></textarea>
         </div>
 
         <div class="editor-box">
@@ -40,13 +40,13 @@
     <!-- 🏆 位於經文箴言下方、正中央的話語主題區 -->
     <div class="topic-section">
         <label for="topic">🖊️ 話語主題</label>
-        <textarea id="topic" placeholder="＄請貼上主題＄請貼上主題＄&#10;（請盡量一行差不多13字以內，善用換行）"></textarea>
+        <textarea id="topic" placeholder="＄請貼上主題＄請貼上主題＄&#10;（一行盡量差不多13字以內）&#10;（請善用換行）"></textarea>
     </div>
 
 
-    <div id="preview-section" style="margin-top: 20px; display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px dashed #ccc;">
-        <h3 style="color: #2c3e50; font-size: 1.1rem; border-bottom: 1px solid #ddd;">🔍 自動辨識 詳情預覽</h3>
-        <div id="preview-content" style="font-size: 0.9rem; color: #555; max-height: 200px; overflow-y: auto;"></div>
+    <div id="preview-section" style="margin-top: 20px; display: none; text-align: left; background: #f9f9f9; padding: 0px 20px 15px; border-radius: 8px; border: 1px dashed #ccc;">
+        <h3 style="color: #2c3e50; font-size: 1.1rem; margin: 10px 3px;">🔍 自動辨識 詳情預覽</h3>
+        <div id="preview-content" style="font-size: 0.9rem; margin: 0 0 8px 0; color: #555; max-height: 200px; overflow-y: auto;"></div>
     </div>
 
 
@@ -61,14 +61,16 @@
 async function sendToPython() {
     const btn = document.getElementById('gen-btn');
     const statusMsg = document.getElementById('status-msg');
-    const previewSection = document.getElementById('preview-section'); // 剛才新增的 div
+    const previewSection = document.getElementById('preview-section'); // 新增的 div
     const previewContent = document.getElementById('preview-content');
+    const templateSelect = document.getElementById('template-select'); // 取得 select 元素
     
     btn.disabled = true;
     statusMsg.innerHTML = "⏳ 正在處理中...";
 
     let data = {
         template_type: document.getElementById('template-select').value,
+        template_name: templateSelect.options[templateSelect.selectedIndex].text, // 🏆 抓取選單文字（例如：主大永主日）
         date: "",
         topic: document.getElementById('topic').value,
         bible_raw: document.getElementById('bible-input').value,

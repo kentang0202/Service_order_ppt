@@ -107,6 +107,8 @@ def split_bible_text(text: str, max_chars: int = 100) -> list[str]:
 def start_process(data):
     try:
         template_type = data.get('template_type', 'main_sunday')
+        # 🏆 接收前端 select 的文字，若無則 fallback 到 cfg['label']
+        template_display_name = data.get('template_name', '')
 
         # 模板組態設定：定義各自的底稿檔案與專屬的頁碼索引
         template_configs = {
@@ -259,8 +261,9 @@ def start_process(data):
         output_name = f"{file_date}{cfg['label']}.pptx"
         prs.save(os.path.join(BASE_DIR, output_name))
 
-        # 9. 組裝前端預覽 HTML
-        preview_html = f"<div class='preview-header'>📋 採用模板：{cfg['label']}</div>"
+        # 9. 組裝前端預覽 HTML（採用模板改為 select 選項文字）
+        display_template = template_display_name if template_display_name else cfg['label']
+        preview_html = f"<div class='preview-header'>📋 採用模板：{display_template}</div>"
         preview_html += f"<div class='preview-header'>{date_display}</div>"
         formatted_topic = topic_str.strip().replace('\n', '<br>')
         preview_html += (

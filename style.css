@@ -46,7 +46,7 @@ header h1 {
 }
 
 .subtitle {
-    font-size: 1.1rem;    
+    font-size: 1.3rem;    
     color: #888888;       
     font-weight: normal;  
     margin: 0;
@@ -56,6 +56,7 @@ header h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    justify-content: flex-end;
     min-width: 200px;
 }
 
@@ -63,12 +64,12 @@ header h1 {
     font-weight: bold;
     margin-bottom: 6px;
     color: #34495e;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 /* 統一下拉選單樣式 */
 select {
-    padding: 8px 12px;
+    padding: 8px 6px ;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1rem;
@@ -76,7 +77,7 @@ select {
     background-color: #fff;
     cursor: pointer;
     box-sizing: border-box;
-    width: 100%;
+    width: 95%;
 }
 
 select:focus {
@@ -101,14 +102,15 @@ select:focus {
 }
 
 #topic {
-    width: 80%;
-    max-width: 600px;
-    height: 70px;
+    width: 28ch;             /* 🏆 13個中文字（約26ch） + 左右緩衝2ch */
+    max-width: 100%;         /* 避免螢幕過小時超出容器 */
+    height: 5.5lh;
     padding: 10px;
     font-size: 1rem;
+    font-family: 'Consolas', 'Microsoft JhengHei', monospace; /* 🏆 必須使用等寬字型，字數寬度才會精準一致 */
     border: 1px solid #ddd;
     border-radius: 6px;
-    box-sizing: border-box;
+    box-sizing: border-box;  /* 寬度包含 padding 與 border */
     resize: vertical;
     text-align: center;
 }
@@ -137,7 +139,7 @@ select:focus {
 
 textarea {
     width: 38ch;         /* 18個中文字 + 左右緩衝 */
-    height: 450px;
+    height: 20lh;
     padding: 10px;
     box-sizing: border-box; /* 關鍵：寬度包含 padding */
     font-family: 'Consolas', 'Microsoft JhengHei', monospace; /* 必須用等寬字型，38ch 才會準 */
