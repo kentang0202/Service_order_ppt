@@ -2,15 +2,27 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>主大永2026主日司會模板 生成器</title>
+    <title>禮拜流程/司會模板PPT生成器</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app-container">
     <header>
-        <h1>⛪ 主大永2026主日司會模板 生成器</h1>
-	    <p class="subtitle">2026 奔跑之年</p>
+        <div class="header-titles">
+            <h1>⛪ 禮拜流程/司會模板PPT生成器</h1>
+            <p class="subtitle">年份：2026 奔跑之年</p>
+        </div>
+
+        <!-- 🏆 移至標題右側的模板選擇 -->
+        <div class="header-template">
+            <label for="template-select">📋 模板類型</label>
+            <select id="template-select">
+                <option value="main_sunday">主大永主日</option>
+                <option value="main_wednesday">主大永週三</option>
+                <option value="ss_sunday">SS主日（努力開發中）</option>
+            </select>
+        </div>
     </header>
    
     <div class="main-content">
@@ -25,14 +37,11 @@
         </div>
     </div>
 
-    <div class="config-row">
-        
-        <div class="input-group">
-            <label>🖊️ 話語主題</label>
-            <textarea id="topic" style="height: 70px;" placeholder="請貼上主題...&#10;（可多行）"></textarea>
-        </div>
+    <!-- 🏆 位於經文箴言下方、正中央的話語主題區 -->
+    <div class="topic-section">
+        <label for="topic">🖊️ 話語主題</label>
+        <textarea id="topic" placeholder="＄請貼上主題＄請貼上主題＄&#10;（請盡量一行差不多13字以內，善用換行）"></textarea>
     </div>
-
 
 
     <div id="preview-section" style="margin-top: 20px; display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px dashed #ccc;">
@@ -59,6 +68,7 @@ async function sendToPython() {
     statusMsg.innerHTML = "⏳ 正在處理中...";
 
     let data = {
+        template_type: document.getElementById('template-select').value,
         date: "",
         topic: document.getElementById('topic').value,
         bible_raw: document.getElementById('bible-input').value,
@@ -90,6 +100,20 @@ async function sendToPython() {
         btn.disabled = false;
     }
 }
+
+const templateSelect = document.getElementById('template-select');
+const proverbsInput = document.getElementById('proverbs-input');
+
+templateSelect.addEventListener('change', function() {
+    if (this.value === 'main_wednesday') {
+        proverbsInput.value = '';
+        proverbsInput.disabled = true;
+        proverbsInput.placeholder = '⚠️ 週三禮拜無箴言交讀。';
+    } else {
+        proverbsInput.disabled = false;
+        proverbsInput.placeholder = '系統會自動偵測，您就大膽貼上吧\n\nＯＯ箴言交讀文\n角色 – 內容...（阿們！）\n角色 – 內容...（阿們！）';
+    }
+});
 </script>
 
 </body>
