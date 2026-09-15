@@ -1,11 +1,17 @@
 import eel
 import re
 import datetime
-import os
+import sys, os
 from pptx import Presentation
 from pptx.util import Pt
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# 🏆 核心修復：精準抓取使用者執行檔所在的真實目錄
+if getattr(sys, 'frozen', False):
+    # 打包成 exe 執行時：指向 clickMeToRun.exe 所在的真實資料夾
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    # 一般 python main.py 執行時：指向 main.py 所在資料夾
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 避免掃描子目錄造成 Google Drive 卡頓
 _real_walk = os.walk
