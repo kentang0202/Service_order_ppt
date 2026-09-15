@@ -5,13 +5,7 @@ import sys, os
 from pptx import Presentation
 from pptx.util import Pt
 
-# 🏆 核心修復：精準抓取使用者執行檔所在的真實目錄
-if getattr(sys, 'frozen', False):
-    # 打包成 exe 執行時：指向 clickMeToRun.exe 所在的真實資料夾
-    BASE_DIR = os.path.dirname(sys.executable)
-else:
-    # 一般 python main.py 執行時：指向 main.py 所在資料夾
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 避免掃描子目錄造成 Google Drive 卡頓
 _real_walk = os.walk
@@ -263,9 +257,19 @@ def start_process(data):
         review_slide.shapes.title.text = date_str
         move_slide(prs, cfg["idx_topic"], len(prs.slides) - 1)
 
-        # 8. 儲存檔案
+
+        # 8. 儲存檔案（跳出 Windows 另存新檔視窗）
         output_name = f"{file_date}{cfg['label']}.pptx"
-        prs.save(os.path.join(BASE_DIR, output_name))
+
+        # 判斷是否為 PyInstaller 打包環境，若是則指向真實 exe 所在目錄
+        if getattr(sys, 'frozen', False):
+            target_dir = os.path.dirname(sys.executable)
+        else:
+            target_dir = os.path.dirname(os.path.abspath(__file__))
+
+        save_path = os.path.join(target_dir, output_name)
+        prs.save(save_path)
+
 
         # 9. 組裝前端預覽 HTML（採用模板改為 select 選項文字）
         display_template = template_display_name if template_display_name else cfg['label']
